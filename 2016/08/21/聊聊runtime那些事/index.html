@@ -84,17 +84,17 @@
 
 
 
-<meta name="description" content="零、前言这篇文章讲解了一些runtime的基本知识，需要有一定的objc基础及开发经验。也不能算的上百分百原创，只是我读这篇博客的学习笔记罢了。主要描述了runtime的基本概念及作用。">
+<meta name="description" content="前言这篇文章讲解了一些runtime的基本知识，需要有一定的objc基础及开发经验。也不能算的上百分百原创，只是我读这篇博客的学习笔记罢了。主要描述了runtime的基本概念及作用。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="聊聊runtime那些事">
 <meta property="og:url" content="http://yoursite.com/2016/08/21/聊聊runtime那些事/index.html">
 <meta property="og:site_name" content="T萌萌BiuBiuBiu~">
-<meta property="og:description" content="零、前言这篇文章讲解了一些runtime的基本知识，需要有一定的objc基础及开发经验。也不能算的上百分百原创，只是我读这篇博客的学习笔记罢了。主要描述了runtime的基本概念及作用。">
+<meta property="og:description" content="前言这篇文章讲解了一些runtime的基本知识，需要有一定的objc基础及开发经验。也不能算的上百分百原创，只是我读这篇博客的学习笔记罢了。主要描述了runtime的基本概念及作用。">
 <meta property="og:image" content="http://i1.buimg.com/572363/8a498205c9c2114a.png">
-<meta property="og:updated_time" content="2016-08-20T16:58:44.000Z">
+<meta property="og:updated_time" content="2016-08-20T18:20:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="聊聊runtime那些事">
-<meta name="twitter:description" content="零、前言这篇文章讲解了一些runtime的基本知识，需要有一定的objc基础及开发经验。也不能算的上百分百原创，只是我读这篇博客的学习笔记罢了。主要描述了runtime的基本概念及作用。">
+<meta name="twitter:description" content="前言这篇文章讲解了一些runtime的基本知识，需要有一定的objc基础及开发经验。也不能算的上百分百原创，只是我读这篇博客的学习笔记罢了。主要描述了runtime的基本概念及作用。">
 <meta name="twitter:image" content="http://i1.buimg.com/572363/8a498205c9c2114a.png">
 
 
@@ -297,11 +297,11 @@
       
 
       
-        <h2 id="零、前言"><a href="#零、前言" class="headerlink" title="零、前言"></a>零、前言</h2><p>这篇文章讲解了一些<code>runtime</code>的基本知识，需要有一定的<code>objc</code>基础及开发经验。也不能算的上百分百原创，只是我读<a href="http://yulingtianxia.com/blog/2014/11/05/objective-c-runtime/" target="_blank" rel="external">这篇博客</a>的学习笔记罢了。主要描述了<code>runtime</code>的基本概念及作用。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这篇文章讲解了一些<code>runtime</code>的基本知识，需要有一定的<code>objc</code>基础及开发经验。也不能算的上百分百原创，只是我读<a href="http://yulingtianxia.com/blog/2014/11/05/objective-c-runtime/" target="_blank" rel="external">这篇博客</a>的学习笔记罢了。主要描述了<code>runtime</code>的基本概念及作用。</p>
 <a id="more"></a>
-<h2 id="一、从理解发送消息讲起"><a href="#一、从理解发送消息讲起" class="headerlink" title="一、从理解发送消息讲起"></a>一、从理解发送消息讲起</h2><p>为什么<code>objc</code>叫消息发送？为什么不叫函数调用？在<code>objc</code>中，发送消息仅仅表示一种行为 ，不能理解为像<code>C</code>语言中那样的函数调用。原因就是在发送消息的背后，<code>runtime</code>帮我们做了非常多的事情。这样是<code>objc</code>能真正成为一门动态语言的真正原因。</p>
+<h2 id="从理解发送消息讲起"><a href="#从理解发送消息讲起" class="headerlink" title="从理解发送消息讲起"></a>从理解发送消息讲起</h2><p>为什么<code>objc</code>叫消息发送？为什么不叫函数调用？在<code>objc</code>中，发送消息仅仅表示一种行为 ，不能理解为像<code>C</code>语言中那样的函数调用。原因就是在发送消息的背后，<code>runtime</code>帮我们做了非常多的事情。这样是<code>objc</code>能真正成为一门动态语言的真正原因。</p>
 <hr>
-<h2 id="二、要学习runtime所要掌握的几个基本概念"><a href="#二、要学习runtime所要掌握的几个基本概念" class="headerlink" title="二、要学习runtime所要掌握的几个基本概念"></a>二、要学习<code>runtime</code>所要掌握的几个基本概念</h2><h4 id="在开始学习runtime之前，有几个基本的概念是必须要了解的"><a href="#在开始学习runtime之前，有几个基本的概念是必须要了解的" class="headerlink" title="在开始学习runtime之前，有几个基本的概念是必须要了解的:"></a>在开始学习<code>runtime</code>之前，有几个基本的概念是必须要了解的:</h4><h3 id="SEL"><a href="#SEL" class="headerlink" title="SEL"></a>SEL</h3><p><code>SEL</code>是<code>selector</code>在<code>objc</code>中的表示类型，<code>selector</code>是方法选择器，可以理解为方法的ID。而这个ID的数据结构是<code>SEL</code>：</p>
+<h2 id="要学习runtime所要掌握的几个基本概念"><a href="#要学习runtime所要掌握的几个基本概念" class="headerlink" title="要学习runtime所要掌握的几个基本概念"></a>要学习<code>runtime</code>所要掌握的几个基本概念</h2><h4 id="在开始学习runtime之前，有几个基本的概念是必须要了解的"><a href="#在开始学习runtime之前，有几个基本的概念是必须要了解的" class="headerlink" title="在开始学习runtime之前，有几个基本的概念是必须要了解的:"></a>在开始学习<code>runtime</code>之前，有几个基本的概念是必须要了解的:</h4><h3 id="SEL"><a href="#SEL" class="headerlink" title="SEL"></a>SEL</h3><p><code>SEL</code>是<code>selector</code>在<code>objc</code>中的表示类型，<code>selector</code>是方法选择器，可以理解为方法的ID。而这个ID的数据结构是<code>SEL</code>：</p>
 <p><code>typedef struct objc_selector *SEL</code></p>
 <p>其实它就是个映射到方法的C字符串，你可以用 <code>Objc</code> 编译器命令<code>@selector()</code>或者 <code>Runtime</code> 系统的<code>sel_registerName</code>函数来获得一个<code>SEL</code>类型的方法选择器。</p>
 <h3 id="id"><a href="#id" class="headerlink" title="id"></a>id</h3><p><code>objc_msgSend</code>第一个参数类型为<code>id</code>，大家对它都不陌生，它是一个指向类实例的指针：</p>
@@ -349,7 +349,7 @@
 <li>你会发现<code>IMP</code>指向的方法与<code>objc_msgSend</code>函数类型相同，参数都包含<code>id</code>和<code>SEL</code>类型。每个方法名都对应一个<code>SEL</code>类型的方法选择器，而每个实例对象中的SEL对应的方法实现肯定是唯一的，通过一组<code>id</code>和<code>SEL</code>参数就能确定唯一的方法实现地址；反之亦然。</li>
 </ul>
 <hr>
-<h2 id="三、runtime在消息转发中的应用"><a href="#三、runtime在消息转发中的应用" class="headerlink" title="三、runtime在消息转发中的应用"></a>三、<code>runtime</code>在消息转发中的应用</h2><p><strong>首先需要明确的是，在<code>objc</code>中，直到运行时才将消息与方法实现绑定。而这些工作都是<code>runtime</code>为我们做的。</strong></p>
+<h2 id="runtime在消息转发中的应用"><a href="#runtime在消息转发中的应用" class="headerlink" title="runtime在消息转发中的应用"></a><code>runtime</code>在消息转发中的应用</h2><p><strong>首先需要明确的是，在<code>objc</code>中，直到运行时才将消息与方法实现绑定。而这些工作都是<code>runtime</code>为我们做的。</strong></p>
 <h3 id="从objc-msgSend讲起"><a href="#从objc-msgSend讲起" class="headerlink" title="从objc_msgSend讲起"></a>从<code>objc_msgSend</code>讲起</h3><p>其实<code>[receiver message]</code>会被编译器转化为：</p>
 <p><code>objc_msgSend(receiver, selector)</code></p>
 <p>如果消息含有参数，则为：</p>
@@ -413,7 +413,7 @@
 <p>可见，利用重定向是在<code>objc</code>模拟多继承的一种方法。但是重定向和动态方法解析一样都有弊端，那就是还是不够“灵活”。消息中<code>sel</code>不能被我们更换。设想这种情景：如果我们又想更换<code>sel</code>，又想更换消息的接受者，此时我们该怎么做？</p>
 <h4 id="第三步：完整的消息转发机制"><a href="#第三步：完整的消息转发机制" class="headerlink" title="第三步：完整的消息转发机制"></a>第三步：完整的消息转发机制</h4><p>上文我们降到了如果动态方法解析失败，进入重定向，那么重定向也失败了，就来到了完整的消息转发机制:</p>
 <p> 这里遇到了些小困难，接下来在填坑吧</p>
-<h3 id="三、runtime为实例变量做的那些事"><a href="#三、runtime为实例变量做的那些事" class="headerlink" title="三、runtime为实例变量做的那些事"></a>三、<code>runtime</code>为实例变量做的那些事</h3><p><code>@property</code>大家每天都在用，但也许你不知道，<code>runtime</code>在你为类添加了一个属性时，它会将这个成员变量(<code>iva</code>)存放在类对象里。这和比如<code>JAVA</code>等语言有着很大的不同：</p>
+<h3 id="runtime为实例变量做的那些事"><a href="#runtime为实例变量做的那些事" class="headerlink" title="runtime为实例变量做的那些事"></a><code>runtime</code>为实例变量做的那些事</h3><p><code>@property</code>大家每天都在用，但也许你不知道，<code>runtime</code>在你为类添加了一个属性时，它会将这个成员变量(<code>iva</code>)存放在类对象里。这和比如<code>JAVA</code>等语言有着很大的不同：</p>
 <blockquote>
 <p><code>objc</code>将实例变量当做一种存储偏移量(offset)所用的特殊变量交由类对象保管。偏移量会运行期间查找，如果类的定义变了，那存储的偏移量也就变了。这样的话，无论何时访问实例变量，都能获取到正确的值。</p>
 </blockquote>
@@ -422,8 +422,8 @@
 <blockquote>
 <p>当一个类定义了某些成员变量后编译一次后，再次改变该类的成员变量，会导致<strong>偏移量</strong>发生改变。在有<code>runtime</code>的情况下，它会自动帮你调整<strong>偏移量</strong>，以保证不用再次编译文件。</p>
 </blockquote>
-<h3 id="四、关联对象"><a href="#四、关联对象" class="headerlink" title="四、关联对象"></a>四、关联对象</h3><p>关联对象指的是动态的为一个对象添加变量，之前有写过介绍的短文：<a href="http://www.jianshu.com/p/968070a1cec3" target="_blank" rel="external">在分类中给类添加属性</a>。</p>
-<h3 id="五、Method-Swizzling"><a href="#五、Method-Swizzling" class="headerlink" title="五、Method Swizzling"></a>五、<code>Method Swizzling</code></h3><p>之前所说的消息转发虽然功能强大，但需要我们了解并且能更改对应类的源代码，因为我们需要实现自己的转发逻辑。当我们无法触碰到某个类的源代码，却想更改这个类某个方法的实现时，该怎么办呢？可能继承类并重写方法是一种想法，但是有时无法达到目的。这里介绍的是 Method Swizzling ，它通过重新映射方法对应的实现来达到“偷天换日”的目的。跟消息转发相比，Method Swizzling 的做法更为隐蔽，甚至有些冒险，也增大了debug的难度。</p>
+<h3 id="关联对象"><a href="#关联对象" class="headerlink" title="关联对象"></a>关联对象</h3><p>关联对象指的是动态的为一个对象添加变量，之前有写过介绍的短文：<a href="http://www.jianshu.com/p/968070a1cec3" target="_blank" rel="external">在分类中给类添加属性</a>。</p>
+<h3 id="Method-Swizzling"><a href="#Method-Swizzling" class="headerlink" title="Method Swizzling"></a><code>Method Swizzling</code></h3><p>之前所说的消息转发虽然功能强大，但需要我们了解并且能更改对应类的源代码，因为我们需要实现自己的转发逻辑。当我们无法触碰到某个类的源代码，却想更改这个类某个方法的实现时，该怎么办呢？可能继承类并重写方法是一种想法，但是有时无法达到目的。这里介绍的是 Method Swizzling ，它通过重新映射方法对应的实现来达到“偷天换日”的目的。跟消息转发相比，Method Swizzling 的做法更为隐蔽，甚至有些冒险，也增大了debug的难度。</p>
 <p>上一个🌰：</p>
 <pre><code>+ (void)load{
 
@@ -469,7 +469,7 @@
 <p>系统调用<code>viewWillAppear:</code>(<code>SEL</code>) —-&gt; 来到了<code>customMethod</code>的<code>IMP</code> —–&gt; 我们自己调用<code>customMethod:</code>的<code>SEL</code> —–&gt; 系统<code>viewWillAppear:</code>的<code>IMP</code></p>
 <p>目前为止小弟也只是知道有这么个东西，还真没用到过这玩意。真有兴趣可以看看这篇：<a href="http://blog.csdn.net/yiyaaixuexi/article/details/9374411" target="_blank" rel="external">Objective-C的hook方案（一）: Method Swizzling</a></p>
 <p>8-21凌晨补充下：最近基友分享了<a href="http://www.jianshu.com/p/5492d2d3342b" target="_blank" rel="external">一篇关于<code>Method Swizzling</code>的应用方案</a>，是腾讯一面提到的。有兴趣可以看下。</p>
-<h3 id="五、扯扯淡😪"><a href="#五、扯扯淡😪" class="headerlink" title="五、扯扯淡😪"></a>五、扯扯淡😪</h3><p>这篇文章花了不少心血，也通过撰写这篇文章彻底重新认识了<code>Runtime</code>这个之前小白时看都不敢看的东西。也观摩了不少大神的博客，感觉平时应该多注意这些好的资源，有时候比闷头写代码强不少😃。<br>在此放一下我特别喜欢的一位博主的博客：<a href="http://yulingtianxia.com/" target="_blank" rel="external">玉令天下的博客</a>，就像引言所说，这篇文章不过是我读这为大神博客的学习笔记罢了。作为同龄的开发者，很是汗颜啊，共勉吧~~</p>
+<h3 id="扯扯淡😪"><a href="#扯扯淡😪" class="headerlink" title="扯扯淡😪"></a>扯扯淡😪</h3><p>这篇文章花了不少心血，也通过撰写这篇文章彻底重新认识了<code>Runtime</code>这个之前小白时看都不敢看的东西。也观摩了不少大神的博客，感觉平时应该多注意这些好的资源，有时候比闷头写代码强不少😃。<br>在此放一下我特别喜欢的一位博主的博客：<a href="http://yulingtianxia.com/" target="_blank" rel="external">玉令天下的博客</a>，就像引言所说，这篇文章不过是我读这为大神博客的学习笔记罢了。作为同龄的开发者，很是汗颜啊，共勉吧~~</p>
 
       
     </div>
@@ -622,7 +622,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#零、前言"><span class="nav-number">1.</span> <span class="nav-text">零、前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、从理解发送消息讲起"><span class="nav-number">2.</span> <span class="nav-text">一、从理解发送消息讲起</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、要学习runtime所要掌握的几个基本概念"><span class="nav-number">3.</span> <span class="nav-text">二、要学习runtime所要掌握的几个基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#在开始学习runtime之前，有几个基本的概念是必须要了解的"><span class="nav-number">3.0.1.</span> <span class="nav-text">在开始学习runtime之前，有几个基本的概念是必须要了解的:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SEL"><span class="nav-number">3.1.</span> <span class="nav-text">SEL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#id"><span class="nav-number">3.2.</span> <span class="nav-text">id</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Class"><span class="nav-number">3.3.</span> <span class="nav-text">Class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Method"><span class="nav-number">3.4.</span> <span class="nav-text">Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IMP"><span class="nav-number">3.5.</span> <span class="nav-text">IMP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、runtime在消息转发中的应用"><span class="nav-number">4.</span> <span class="nav-text">三、runtime在消息转发中的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#从objc-msgSend讲起"><span class="nav-number">4.1.</span> <span class="nav-text">从objc_msgSend讲起</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#消息转发的第一步：-动态方法解析"><span class="nav-number">4.1.1.</span> <span class="nav-text">消息转发的第一步： 动态方法解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第二步：-重定向"><span class="nav-number">4.1.2.</span> <span class="nav-text">第二步： 重定向</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第三步：完整的消息转发机制"><span class="nav-number">4.1.3.</span> <span class="nav-text">第三步：完整的消息转发机制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、runtime为实例变量做的那些事"><span class="nav-number">4.2.</span> <span class="nav-text">三、runtime为实例变量做的那些事</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、关联对象"><span class="nav-number">4.3.</span> <span class="nav-text">四、关联对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、Method-Swizzling"><span class="nav-number">4.4.</span> <span class="nav-text">五、Method Swizzling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、扯扯淡😪"><span class="nav-number">4.5.</span> <span class="nav-text">五、扯扯淡😪</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从理解发送消息讲起"><span class="nav-number">2.</span> <span class="nav-text">从理解发送消息讲起</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#要学习runtime所要掌握的几个基本概念"><span class="nav-number">3.</span> <span class="nav-text">要学习runtime所要掌握的几个基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#在开始学习runtime之前，有几个基本的概念是必须要了解的"><span class="nav-number">3.0.1.</span> <span class="nav-text">在开始学习runtime之前，有几个基本的概念是必须要了解的:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SEL"><span class="nav-number">3.1.</span> <span class="nav-text">SEL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#id"><span class="nav-number">3.2.</span> <span class="nav-text">id</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Class"><span class="nav-number">3.3.</span> <span class="nav-text">Class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Method"><span class="nav-number">3.4.</span> <span class="nav-text">Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IMP"><span class="nav-number">3.5.</span> <span class="nav-text">IMP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#runtime在消息转发中的应用"><span class="nav-number">4.</span> <span class="nav-text">runtime在消息转发中的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#从objc-msgSend讲起"><span class="nav-number">4.1.</span> <span class="nav-text">从objc_msgSend讲起</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#消息转发的第一步：-动态方法解析"><span class="nav-number">4.1.1.</span> <span class="nav-text">消息转发的第一步： 动态方法解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第二步：-重定向"><span class="nav-number">4.1.2.</span> <span class="nav-text">第二步： 重定向</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第三步：完整的消息转发机制"><span class="nav-number">4.1.3.</span> <span class="nav-text">第三步：完整的消息转发机制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#runtime为实例变量做的那些事"><span class="nav-number">4.2.</span> <span class="nav-text">runtime为实例变量做的那些事</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关联对象"><span class="nav-number">4.3.</span> <span class="nav-text">关联对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Method-Swizzling"><span class="nav-number">4.4.</span> <span class="nav-text">Method Swizzling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扯扯淡😪"><span class="nav-number">4.5.</span> <span class="nav-text">扯扯淡😪</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

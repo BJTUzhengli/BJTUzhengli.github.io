@@ -84,17 +84,17 @@
 
 
 
-<meta name="description" content="零、引言促使我写这篇文章的主要原因是我发现平时利用的class方法与object_getClass函数的返回值竟然是不一样的，这与我之前理解的类的概念一直有所偏差。在查阅了部分资料后，发现对objc中关于类与对象有了一个新的理解，遂撰此文记录下。">
+<meta name="description" content="引言促使我写这篇文章的主要原因是我发现平时利用的class方法与object_getClass函数的返回值竟然是不一样的，这与我之前理解的类的概念一直有所偏差。在查阅了部分资料后，发现对objc中关于类与对象有了一个新的理解，遂撰此文记录下。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解objc中的对象与类">
 <meta property="og:url" content="http://yoursite.com/2016/08/20/深入理解objc中的对象与类/index.html">
 <meta property="og:site_name" content="T萌萌BiuBiuBiu~">
-<meta property="og:description" content="零、引言促使我写这篇文章的主要原因是我发现平时利用的class方法与object_getClass函数的返回值竟然是不一样的，这与我之前理解的类的概念一直有所偏差。在查阅了部分资料后，发现对objc中关于类与对象有了一个新的理解，遂撰此文记录下。">
+<meta property="og:description" content="引言促使我写这篇文章的主要原因是我发现平时利用的class方法与object_getClass函数的返回值竟然是不一样的，这与我之前理解的类的概念一直有所偏差。在查阅了部分资料后，发现对objc中关于类与对象有了一个新的理解，遂撰此文记录下。">
 <meta property="og:image" content="http://i1.buimg.com/572363/8a498205c9c2114a.png">
-<meta property="og:updated_time" content="2016-08-20T17:55:59.000Z">
+<meta property="og:updated_time" content="2016-08-20T18:18:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解objc中的对象与类">
-<meta name="twitter:description" content="零、引言促使我写这篇文章的主要原因是我发现平时利用的class方法与object_getClass函数的返回值竟然是不一样的，这与我之前理解的类的概念一直有所偏差。在查阅了部分资料后，发现对objc中关于类与对象有了一个新的理解，遂撰此文记录下。">
+<meta name="twitter:description" content="引言促使我写这篇文章的主要原因是我发现平时利用的class方法与object_getClass函数的返回值竟然是不一样的，这与我之前理解的类的概念一直有所偏差。在查阅了部分资料后，发现对objc中关于类与对象有了一个新的理解，遂撰此文记录下。">
 <meta name="twitter:image" content="http://i1.buimg.com/572363/8a498205c9c2114a.png">
 
 
@@ -297,18 +297,34 @@
       
 
       
-        <h4 id="零、引言"><a href="#零、引言" class="headerlink" title="零、引言"></a>零、引言</h4><p>促使我写这篇文章的主要原因是我发现平时利用的<code>class</code>方法与<code>object_getClass</code>函数的返回值竟然是不一样的，这与我之前理解的类的概念一直有所偏差。在查阅了部分资料后，发现对<code>objc</code>中关于类与对象有了一个新的理解，遂撰此文记录下。<br><a id="more"></a></p>
-<h4 id="一、深入了解类与对象"><a href="#一、深入了解类与对象" class="headerlink" title="一、深入了解类与对象"></a>一、深入了解类与对象</h4><p>想要搞清楚这两个方法的区别，需要彻底搞清楚<code>objc</code>中关于类与对象的概念。</p>
+        <h4 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h4><p>促使我写这篇文章的主要原因是我发现平时利用的<code>class</code>方法与<code>object_getClass</code>函数的返回值竟然是不一样的，这与我之前理解的类的概念一直有所偏差。在查阅了部分资料后，发现对<code>objc</code>中关于类与对象有了一个新的理解，遂撰此文记录下。<br><a id="more"></a></p>
+<h4 id="深入了解类与对象"><a href="#深入了解类与对象" class="headerlink" title="深入了解类与对象"></a>深入了解类与对象</h4><p>想要搞清楚这两个方法的区别，需要彻底搞清楚<code>objc</code>中关于类与对象的概念。</p>
 <blockquote>
 <p><code>objc</code>中对象与类的概念</p>
 </blockquote>
 <p><code>objc</code>中关于对象的定义如下:</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/// Represents an instance of a class.</span></div><div class="line"><span class="keyword">struct</span> objc_object &#123;</div><div class="line">    Class isa  OBJC_ISA_AVAILABILITY;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">/// Represents an instance of a class.</div><div class="line">struct objc_object &#123;</div><div class="line">    Class isa  OBJC_ISA_AVAILABILITY;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 <p>可见对象是一个含有<code>isa</code>指针的结构体。那么<code>isa</code>指向的<code>Class</code>又是什么呢？</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/// An opaque type that represents an Objective-C class.</span></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> objc_class *Class;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/// An opaque type that represents an Objective-C class.</div><div class="line">typedef struct objc_class *Class;</div></pre></td></tr></table></figure>
 <p>原来<code>Class</code>是一个指向<code>objc_class</code>结构体的指针，apple的注释写的很清楚，<code>Class</code>相当于<code>objc</code>中的类。所以只有我们搞明白了<code>objc_class</code>结构体到底是什么，也就搞清楚了<code>objc</code>中关于类的概念。<br>objc/runtime.h中关于该结构体的定义如下:</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">struct</span> objc_class &#123;	</div><div class="line">    Class isa  OBJC_ISA_AVAILABILITY;</div><div class="line">	</div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> !__OBJC2__</span></div><div class="line">    Class super_class                                        OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *name                                         OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> version                                             OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> info                                                OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> instance_size                                       OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_ivar_list *ivars                             OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_method_list **methodLists                    OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_cache *cache                                 OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_protocol_list *protocols                     OBJC2_UNAVAILABLE;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">	</div><div class="line">&#125; OBJC2_UNAVAILABLE;</div><div class="line"><span class="comment">/* Use `Class` instead of `struct objc_class *` */</span></div></pre></td></tr></table></figure>
-<p>虽然下面的一段串内容已经是<code>OBJC2_UNAVAILABLE</code>了，但依然可以看出一些apple关于<code>class</code>的定义的倪端:</p>
+<pre><code>struct objc_class {    
+    Class isa  OBJC_ISA_AVAILABILITY;
+
+#if !__OBJC2__
+    Class super_class                                        OBJC2_UNAVAILABLE;
+    const char *name                                         OBJC2_UNAVAILABLE;
+    long version                                             OBJC2_UNAVAILABLE;
+    long info                                                OBJC2_UNAVAILABLE;
+    long instance_size                                       OBJC2_UNAVAILABLE;
+    struct objc_ivar_list *ivars                             OBJC2_UNAVAILABLE;
+    struct objc_method_list **methodLists                    OBJC2_UNAVAILABLE;
+    struct objc_cache *cache                                 OBJC2_UNAVAILABLE;
+    struct objc_protocol_list *protocols                     OBJC2_UNAVAILABLE;
+#endif
+
+} OBJC2_UNAVAILABLE;
+/* Use `Class` instead of `struct objc_class *` */
+</code></pre><p>虽然下面的一段串内容已经是<code>OBJC2_UNAVAILABLE</code>了，但依然可以看出一些apple关于<code>class</code>的定义的倪端:</p>
 <ol>
 <li>我们注意到，<code>objc_class</code>结构体内部也含有一个<code>isa</code>指针，也就说“<strong>类也是有类的</strong>”。虽然读起来很拗口，但这也是为什么类有时候也被称为类对象的原因：<strong>类其实也是一个对象~</strong></li>
 <li>下面一段内容含有：类的方法列表(这些方法其实都是对象方法，至于为什么，后面解释)，类的成员变量列表，类的<code>cache</code>列表，类的协议列表。更重要的是，它还有一个指向<code>Class</code>的<code>super_class</code>指针。</li>
@@ -329,7 +345,7 @@
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#if !__OBJC2__</div><div class="line">    Class super_class                                        OBJC2_UNAVAILABLE;</div><div class="line">    const char *name                                         OBJC2_UNAVAILABLE;</div><div class="line">    long version                                             OBJC2_UNAVAILABLE;</div><div class="line">    long info                                                OBJC2_UNAVAILABLE;</div><div class="line">    long instance_size                                       OBJC2_UNAVAILABLE;</div><div class="line">    struct objc_ivar_list *ivars                             OBJC2_UNAVAILABLE;</div><div class="line">    struct objc_method_list **methodLists                    OBJC2_UNAVAILABLE;</div><div class="line">    struct objc_cache *cache                                 OBJC2_UNAVAILABLE;</div><div class="line">    struct objc_protocol_list *protocols                     OBJC2_UNAVAILABLE;</div><div class="line">#endif</div></pre></td></tr></table></figure>
 <p>结合上面的<strong>元类</strong>概念，我们就能明白，原来苹果设计类对象的用意，就是为了存储对象的某些信息，比如对象方法，类遵守的一些协议，对象的属性，对象的类的父类(拗口。。。)等等。所以我们也就不能理解设计元类的用意：存储类的一些信息,比如类方法就存在元类里。相信读到这里，已经对<code>objc</code>中的对象和类有了一个很深刻的理解。下面说说我写这篇文章的主要原因：理解<code>object_getClass</code>函数与<code>class</code>方法。</p>
-<h3 id="二、理解object-getClass函数与class方法。"><a href="#二、理解object-getClass函数与class方法。" class="headerlink" title="二、理解object_getClass函数与class方法。"></a>二、理解<code>object_getClass</code>函数与<code>class</code>方法。</h3><p><strong>注:此处需要对<code>runtime</code>有了解</strong></p>
+<h4 id="理解object-getClass函数与class方法。"><a href="#理解object-getClass函数与class方法。" class="headerlink" title="理解object_getClass函数与class方法。"></a>理解<code>object_getClass</code>函数与<code>class</code>方法。</h4><p><strong>注:此处需要对<code>runtime</code>有了解</strong></p>
 <blockquote>
 <p>天天都在用的<code>class</code>方法</p>
 </blockquote>
@@ -372,8 +388,8 @@
 }
 </code></pre></li>
 </ul>
-<pre><code>也就理解为:**当调用者是类对象时，`class`方法返回自身；当调用者是对象时，返回`object_getClass`函数的返回值。（`object_getClass`函数其实返回的是`isa`指针指的对象,后面会解释)**
-</code></pre><blockquote>
+<p>   也就理解为:<strong>当调用者是类对象时，<code>class</code>方法返回自身；当调用者是对象时，返回<code>object_getClass</code>函数的返回值。（<code>object_getClass</code>函数其实返回的是<code>isa</code>指针指的对象,后面会解释)</strong></p>
+<blockquote>
 <p>强大的<code>runtime</code>函数:<code>object_getClass</code></p>
 </blockquote>
 <ul>
@@ -399,15 +415,16 @@ NSLog(@&quot;metaClass.isa.isa.p%p&quot;,object_getClass(object_getClass(object_
 NSLog(@&quot;metaClass.isa.isa.isa.p%p&quot;,object_getClass(object_getClass(object_getClass(object_getClass(object_getClass(aNumber))))));//元类的isa指针的isa指针的isa指针
 </code></pre></li>
 </ul>
-<p>  然后你会看到如下输出:</p>
-<pre><code>instance.p ===                        0xb000000000000022
-classInstance.p ===                     0x10e5022a0
-classInstance.pWithGetClassFunc       0x105a6a368
+<pre><code>然后你会看到如下输出:
 
-metaClass.p                              0x105a6a390
-metaClass.isa.p                        0x105617198
-metaClass.isa.isa.p                      0x105617198
-metaClass.isa.isa.isa.p                  0x105617198
+  instance.p ===                        0xb000000000000022
+  classInstance.p ===                     0x10e5022a0
+  classInstance.pWithGetClassFunc       0x105a6a368
+
+  metaClass.p                              0x105a6a390
+  metaClass.isa.p                        0x105617198
+  metaClass.isa.isa.p                      0x105617198
+  metaClass.isa.isa.isa.p                  0x105617198
 </code></pre><p>  先看第二段，你会发现第一行和第二行的地址不一样，这是因为元类的<code>isa</code> 指针指向的是根元类，而根元类的<code>isa</code>指针指向自己。 </p>
 <p>  再看第一段，对象的地址和类对象的地址完全不一样。这是因为类对象既不在栈上，也不在堆上。你可以把它理解为单粒。至于为什么是这样，不在本文讨论中。有兴趣的同学可以自己查阅资料。</p>
 <p>  然后我们会发现<code>[NSNumber class]</code>获得的类对象与函数<code>object_getClass</code>获得的类对象地址居然不一样？！</p>
@@ -420,7 +437,8 @@ Class class3 = object_getClass(aNumber);
    <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">(lldb) p class1</div><div class="line">(Class) $0 = NSNumber</div><div class="line">(lldb) p class2</div><div class="line">(Class) $1 = __NSCFNumber</div><div class="line">(lldb) p class3</div><div class="line">(Class) $2 = __NSCFNumber</div></pre></td></tr></table></figure>
 <p>原来<code>NSNumber</code>是类簇。这里还是简单的说说类簇的概念吧：一个父类有好多子类，父类在返回自身对象的时候，向外界隐藏各种细节，根据不同的需要返回的其实是不同的子类对象，这其实就是抽象类工厂的实现思路，iOS最典型的就是<code>NSNumber</code>。</p>
 <hr>
-<h4 id="至此，终于写完了这篇文章。希望对大家有所帮助吧"><a href="#至此，终于写完了这篇文章。希望对大家有所帮助吧" class="headerlink" title="至此，终于写完了这篇文章。希望对大家有所帮助吧~~"></a>至此，终于写完了这篇文章。希望对大家有所帮助吧~~</h4>
+<p>至此，终于写完了这篇文章。希望对大家有所帮助吧~~</p>
+
       
     </div>
 
@@ -576,7 +594,7 @@ Class class3 = object_getClass(aNumber);
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#零、引言"><span class="nav-number">1.</span> <span class="nav-text">零、引言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一、深入了解类与对象"><span class="nav-number">2.</span> <span class="nav-text">一、深入了解类与对象</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、理解object-getClass函数与class方法。"><span class="nav-number"></span> <span class="nav-text">二、理解object_getClass函数与class方法。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#至此，终于写完了这篇文章。希望对大家有所帮助吧"><span class="nav-number">1.</span> <span class="nav-text">至此，终于写完了这篇文章。希望对大家有所帮助吧~~</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#深入了解类与对象"><span class="nav-number">2.</span> <span class="nav-text">深入了解类与对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#理解object-getClass函数与class方法。"><span class="nav-number">3.</span> <span class="nav-text">理解object_getClass函数与class方法。</span></a></li></ol></div>
             
           </div>
         </section>
