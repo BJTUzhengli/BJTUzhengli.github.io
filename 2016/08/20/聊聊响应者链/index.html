@@ -84,23 +84,20 @@
 
 
 
-<meta name="description" content="前言今天面试滴滴的时候聊到了自己以前遇到的一个坑，其中涉及了一些响应者链条的事。本身这个bug就很有代表性(代表了自己对这块非常的不熟悉😃)。无独有偶，自己的好基友前几天腾讯电面一面时也遇到了这个问题。回来好好看了大神的博客。就顺手写个学习笔记自我总结下吧。
-先聊聊响应链UIResponder是所有可以响应事件的类的基类(从名字应该就可以看出来了)，其中包括最常见的UIView和UIViewCo">
+<meta name="description" content="前言今天面试滴滴的时候聊到了自己以前遇到的一个坑，其中涉及了一些响应者链条的事。本身这个bug就很有代表性(代表了自己对这块非常的不熟悉😃)。无独有偶，自己的好基友前几天腾讯电面一面时也遇到了这个问题。回来好好看了大神的博客。就顺手写个学习笔记自我总结下吧。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="聊聊响应者链">
 <meta property="og:url" content="http://yoursite.com/2016/08/20/聊聊响应者链/index.html">
 <meta property="og:site_name" content="T萌萌BiuBiuBiu~">
-<meta property="og:description" content="前言今天面试滴滴的时候聊到了自己以前遇到的一个坑，其中涉及了一些响应者链条的事。本身这个bug就很有代表性(代表了自己对这块非常的不熟悉😃)。无独有偶，自己的好基友前几天腾讯电面一面时也遇到了这个问题。回来好好看了大神的博客。就顺手写个学习笔记自我总结下吧。
-先聊聊响应链UIResponder是所有可以响应事件的类的基类(从名字应该就可以看出来了)，其中包括最常见的UIView和UIViewCo">
+<meta property="og:description" content="前言今天面试滴滴的时候聊到了自己以前遇到的一个坑，其中涉及了一些响应者链条的事。本身这个bug就很有代表性(代表了自己对这块非常的不熟悉😃)。无独有偶，自己的好基友前几天腾讯电面一面时也遇到了这个问题。回来好好看了大神的博客。就顺手写个学习笔记自我总结下吧。">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1792274-621de0157a4b77a3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1792274-001b9095d1e63fe3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1792274-6ab6cb6e961b46b0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1792274-3f5f137ab5e2631f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2016-08-20T10:09:06.000Z">
+<meta property="og:updated_time" content="2016-08-20T10:21:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="聊聊响应者链">
-<meta name="twitter:description" content="前言今天面试滴滴的时候聊到了自己以前遇到的一个坑，其中涉及了一些响应者链条的事。本身这个bug就很有代表性(代表了自己对这块非常的不熟悉😃)。无独有偶，自己的好基友前几天腾讯电面一面时也遇到了这个问题。回来好好看了大神的博客。就顺手写个学习笔记自我总结下吧。
-先聊聊响应链UIResponder是所有可以响应事件的类的基类(从名字应该就可以看出来了)，其中包括最常见的UIView和UIViewCo">
+<meta name="twitter:description" content="前言今天面试滴滴的时候聊到了自己以前遇到的一个坑，其中涉及了一些响应者链条的事。本身这个bug就很有代表性(代表了自己对这块非常的不熟悉😃)。无独有偶，自己的好基友前几天腾讯电面一面时也遇到了这个问题。回来好好看了大神的博客。就顺手写个学习笔记自我总结下吧。">
 <meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1792274-621de0157a4b77a3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
@@ -294,7 +291,7 @@
       
 
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>今天面试滴滴的时候聊到了<a href="http://www.jianshu.com/p/8f2f94ff0459" target="_blank" rel="external">自己以前遇到的一个坑</a>，其中涉及了一些响应者链条的事。本身这个bug就很有代表性(代表了自己对这块非常的不熟悉😃)。无独有偶，自己的好基友前几天腾讯电面一面时也遇到了<a href="http://kyxu.tech/2016/08/19/%E7%88%B6%E8%A7%86%E5%9B%BE%E5%A4%96%E9%83%A8%E5%AD%90%E8%A7%86%E5%9B%BE%E7%82%B9%E5%87%BB%E5%93%8D%E5%BA%94-hitTest/" target="_blank" rel="external">这个问题</a>。回来好好看了<a href="http://zhoon.github.io/ios/2015/04/12/ios-event.html" target="_blank" rel="external">大神的博客</a>。就顺手写个学习笔记自我总结下吧。</p>
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>今天面试滴滴的时候聊到了<a href="http://www.jianshu.com/p/8f2f94ff0459" target="_blank" rel="external">自己以前遇到的一个坑</a>，其中涉及了一些响应者链条的事。本身这个bug就很有代表性(代表了自己对这块非常的不熟悉😃)。无独有偶，自己的好基友前几天腾讯电面一面时也遇到了<a href="http://kyxu.tech/2016/08/19/%E7%88%B6%E8%A7%86%E5%9B%BE%E5%A4%96%E9%83%A8%E5%AD%90%E8%A7%86%E5%9B%BE%E7%82%B9%E5%87%BB%E5%93%8D%E5%BA%94-hitTest/" target="_blank" rel="external">这个问题</a>。回来好好看了<a href="http://zhoon.github.io/ios/2015/04/12/ios-event.html" target="_blank" rel="external">大神的博客</a>。就顺手写个学习笔记自我总结下吧。<br><a id="more"></a></p>
 <h3 id="先聊聊响应链"><a href="#先聊聊响应链" class="headerlink" title="先聊聊响应链"></a>先聊聊响应链</h3><p><code>UIResponder</code>是所有可以响应事件的类的基类(从名字应该就可以看出来了)，其中包括最常见的UIView和<code>UIViewController</code>甚至是<code>UIApplication</code>，所以我们的<code>UIView</code>和<code>UIViewController</code>都是作为响应事件的载体。</p>
 <p>Apple🍎爸爸是这么说的：</p>
 <blockquote>

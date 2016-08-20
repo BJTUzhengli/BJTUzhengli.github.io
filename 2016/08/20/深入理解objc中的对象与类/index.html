@@ -84,35 +84,17 @@
 
 
 
-<meta name="description" content="一、深入了解类与对象想要搞清楚这两个方法的区别，需要彻底搞清楚objc中关于类与对象的概念。
-
-objc中对象与类的概念
-
-objc中关于对象的定义如下:
-1234/// Represents an instance of a class.struct objc_object &amp;#123;    Class isa  OBJC_ISA_AVAILABILITY;&amp;#125;;
-可见对象是一个含有i">
+<meta name="description" content="零、引言促使我写这篇文章的主要原因是我发现平时利用的class方法与object_getClass函数的返回值竟然是不一样的，这与我之前理解的类的概念一直有所偏差。在查阅了部分资料后，发现对objc中关于类与对象有了一个新的理解，遂撰此文记录下。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解objc中的对象与类">
 <meta property="og:url" content="http://yoursite.com/2016/08/20/深入理解objc中的对象与类/index.html">
 <meta property="og:site_name" content="T萌萌BiuBiuBiu~">
-<meta property="og:description" content="一、深入了解类与对象想要搞清楚这两个方法的区别，需要彻底搞清楚objc中关于类与对象的概念。
-
-objc中对象与类的概念
-
-objc中关于对象的定义如下:
-1234/// Represents an instance of a class.struct objc_object &amp;#123;    Class isa  OBJC_ISA_AVAILABILITY;&amp;#125;;
-可见对象是一个含有i">
+<meta property="og:description" content="零、引言促使我写这篇文章的主要原因是我发现平时利用的class方法与object_getClass函数的返回值竟然是不一样的，这与我之前理解的类的概念一直有所偏差。在查阅了部分资料后，发现对objc中关于类与对象有了一个新的理解，遂撰此文记录下。">
 <meta property="og:image" content="http://i1.buimg.com/572363/8a498205c9c2114a.png">
-<meta property="og:updated_time" content="2016-08-20T10:04:15.000Z">
+<meta property="og:updated_time" content="2016-08-20T10:25:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解objc中的对象与类">
-<meta name="twitter:description" content="一、深入了解类与对象想要搞清楚这两个方法的区别，需要彻底搞清楚objc中关于类与对象的概念。
-
-objc中对象与类的概念
-
-objc中关于对象的定义如下:
-1234/// Represents an instance of a class.struct objc_object &amp;#123;    Class isa  OBJC_ISA_AVAILABILITY;&amp;#125;;
-可见对象是一个含有i">
+<meta name="twitter:description" content="零、引言促使我写这篇文章的主要原因是我发现平时利用的class方法与object_getClass函数的返回值竟然是不一样的，这与我之前理解的类的概念一直有所偏差。在查阅了部分资料后，发现对objc中关于类与对象有了一个新的理解，遂撰此文记录下。">
 <meta name="twitter:image" content="http://i1.buimg.com/572363/8a498205c9c2114a.png">
 
 
@@ -306,7 +288,8 @@ objc中关于对象的定义如下:
       
 
       
-        <h4 id="一、深入了解类与对象"><a href="#一、深入了解类与对象" class="headerlink" title="一、深入了解类与对象"></a>一、深入了解类与对象</h4><p>想要搞清楚这两个方法的区别，需要彻底搞清楚<code>objc</code>中关于类与对象的概念。</p>
+        <h4 id="零、引言"><a href="#零、引言" class="headerlink" title="零、引言"></a>零、引言</h4><p>促使我写这篇文章的主要原因是我发现平时利用的<code>class</code>方法与<code>object_getClass</code>函数的返回值竟然是不一样的，这与我之前理解的类的概念一直有所偏差。在查阅了部分资料后，发现对<code>objc</code>中关于类与对象有了一个新的理解，遂撰此文记录下。<br><a id="more"></a></p>
+<h4 id="一、深入了解类与对象"><a href="#一、深入了解类与对象" class="headerlink" title="一、深入了解类与对象"></a>一、深入了解类与对象</h4><p>想要搞清楚这两个方法的区别，需要彻底搞清楚<code>objc</code>中关于类与对象的概念。</p>
 <blockquote>
 <p><code>objc</code>中对象与类的概念</p>
 </blockquote>
@@ -579,7 +562,7 @@ Class class3 = object_getClass(aNumber);
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、深入了解类与对象"><span class="nav-number">1.</span> <span class="nav-text">一、深入了解类与对象</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、理解object-getClass函数与class方法。"><span class="nav-number"></span> <span class="nav-text">二、理解object_getClass函数与class方法。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#至此，终于写完了这篇文章。希望对大家有所帮助吧"><span class="nav-number">1.</span> <span class="nav-text">至此，终于写完了这篇文章。希望对大家有所帮助吧~~</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#零、引言"><span class="nav-number">1.</span> <span class="nav-text">零、引言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一、深入了解类与对象"><span class="nav-number">2.</span> <span class="nav-text">一、深入了解类与对象</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、理解object-getClass函数与class方法。"><span class="nav-number"></span> <span class="nav-text">二、理解object_getClass函数与class方法。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#至此，终于写完了这篇文章。希望对大家有所帮助吧"><span class="nav-number">1.</span> <span class="nav-text">至此，终于写完了这篇文章。希望对大家有所帮助吧~~</span></a></li></ol></div>
             
           </div>
         </section>
