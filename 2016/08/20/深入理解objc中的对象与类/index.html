@@ -84,15 +84,36 @@
 
 
 
-<meta name="description" content="iOS开发菜鸡，努力提高自我中。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="T萌萌BiuBiuBiu~">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="一、深入了解类与对象想要搞清楚这两个方法的区别，需要彻底搞清楚objc中关于类与对象的概念。
+
+objc中对象与类的概念
+
+objc中关于对象的定义如下:
+1234/// Represents an instance of a class.struct objc_object &amp;#123;    Class isa  OBJC_ISA_AVAILABILITY;&amp;#125;;
+可见对象是一个含有i">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解objc中的对象与类">
+<meta property="og:url" content="http://yoursite.com/2016/08/20/深入理解objc中的对象与类/index.html">
 <meta property="og:site_name" content="T萌萌BiuBiuBiu~">
-<meta property="og:description" content="iOS开发菜鸡，努力提高自我中。">
+<meta property="og:description" content="一、深入了解类与对象想要搞清楚这两个方法的区别，需要彻底搞清楚objc中关于类与对象的概念。
+
+objc中对象与类的概念
+
+objc中关于对象的定义如下:
+1234/// Represents an instance of a class.struct objc_object &amp;#123;    Class isa  OBJC_ISA_AVAILABILITY;&amp;#125;;
+可见对象是一个含有i">
+<meta property="og:image" content="http://i1.buimg.com/572363/8a498205c9c2114a.png">
+<meta property="og:updated_time" content="2016-08-20T10:04:15.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="T萌萌BiuBiuBiu~">
-<meta name="twitter:description" content="iOS开发菜鸡，努力提高自我中。">
+<meta name="twitter:title" content="深入理解objc中的对象与类">
+<meta name="twitter:description" content="一、深入了解类与对象想要搞清楚这两个方法的区别，需要彻底搞清楚objc中关于类与对象的概念。
+
+objc中对象与类的概念
+
+objc中关于对象的定义如下:
+1234/// Represents an instance of a class.struct objc_object &amp;#123;    Class isa  OBJC_ISA_AVAILABILITY;&amp;#125;;
+可见对象是一个含有i">
+<meta name="twitter:image" content="http://i1.buimg.com/572363/8a498205c9c2114a.png">
 
 
 
@@ -113,9 +134,9 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/08/20/深入理解objc中的对象与类/"/>
 
-  <title> T萌萌BiuBiuBiu~ </title>
+  <title> 深入理解objc中的对象与类 | T萌萌BiuBiuBiu~ </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -136,9 +157,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -225,9 +244,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -247,128 +266,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/08/20/在分类中添加属性/" itemprop="url">
-                  在分类中添加属性
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-08-20T18:07:37+08:00" content="2016-08-20">
-              2016-08-20
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h6 id="这两天在想着写一个自己的开源框架，类似MJRefresh那种。因为是自己第一个框架，也没有这方面的经验，还在摸索中。"><a href="#这两天在想着写一个自己的开源框架，类似MJRefresh那种。因为是自己第一个框架，也没有这方面的经验，还在摸索中。" class="headerlink" title="这两天在想着写一个自己的开源框架，类似MJRefresh那种。因为是自己第一个框架，也没有这方面的经验，还在摸索中。"></a>这两天在想着写一个自己的开源框架，类似MJRefresh那种。因为是自己第一个框架，也没有这方面的经验，还在摸索中。</h6><ul>
-<li>初步设想是给UIScrollview添加一个分类，在其中添加相关的属性和方法，但是在添加属性的时候遇到了些麻烦。比如以下：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#import &lt;UIKit/UIKit.h&gt;</div><div class="line"></div><div class="line">@interface UITableViewController (ZLRefresh)</div><div class="line"></div><div class="line">@property (nonatomic, strong) NSObject *object;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
-<p>此时编译器会报警告，大意是此分类无法合成属性的相关实例变量。</p>
-<ul>
-<li>查阅了相关资料，比如在《Effective Objective-C 2.0》中就提供了可以使用关联对象的方法实现在分类中添加属性（虽然作者在书中反复强调最好不要这么做…）。如下：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">#import &quot;UITableViewController+ZLRefresh.h&quot;</div><div class="line">#import &lt;objc/runtime.h&gt;</div><div class="line"></div><div class="line">static const char* kObjectPropertyKey = &quot;kObjectPropertyKey&quot;;</div><div class="line"></div><div class="line">@implementation UITableViewController (ZLRefresh)</div><div class="line">- (NSObject *)object&#123;</div><div class="line">    </div><div class="line">    return objc_getAssociatedObject(self, kObjectPropertyKey);</div><div class="line">    </div><div class="line">&#125;</div><div class="line">- (void)setObject:(NSObject *)object&#123;</div><div class="line">    </div><div class="line">    objc_setAssociatedObject(self,</div><div class="line">                    kObjectPropertyKey,</div><div class="line">                    object,</div><div class="line">                    OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
-<p>PS：此处注意要导入<objc runtime.h="">这个头文件！</objc></p>
-<ul>
-<li><p>好吧，我发现脑海中对这个所谓关联对象一点映像都木有QAQ，继续翻阅资料，在书中（依然是《Effective objc2.0》）找到如下：</p>
-<ol>
-<li>可以给对象关联许多对象，这对象通过键来区分。</li>
-</ol>
-<p>2.在存储对象值得时候，可以指明“存储策略”(storage policy)，用以维护相应的内存，（比如上面的<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">3.可以用以下的方法管理关联对象：</div><div class="line">  - ```  void objc_setAssociatedObject(&lt;#id object#&gt;, &lt;#const void *key#&gt;, &lt;#id value#&gt;, &lt;#objc_AssociationPolicy policy#&gt;)</div></pre></td></tr></table></figure></p>
-<p>此方法用以给定的键和策略为某对象设置关联对象值。</p>
-<ul>
-<li><figure class="highlight plain"><figcaption><span>objc_getAssociatedObject(<#id object#="">, <#const void="" *key#="">)```</#const></#id></span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">此方法根据给定的键从某对象中获取相应的关联对象值。</div><div class="line"> - ```objc_removeAssociatedObjects(&lt;#id object#&gt;)</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>此方法用于移除指定对象的全部关联对象。</p>
-</li>
-<li>可以看到这个所谓的关联对象和我们平时所使用的NSDictionary很像，但是作者也强调了，两者之间有个重要的区别：设置关联对象的key是个不透明的指针（<code>void*</code>）。比如在两个键上调用<code>isEqual:</code>方法返回的值是yes，那么dic就认为是二者相等；而然在设置关联对象值时，若想令两个键匹配到同一个值，则二者必须是完全相同的指针才可以。故设置关联对象的键通常是 <strong>静态全局变量</strong></li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/20/深入理解objc中的对象与类/" itemprop="url">
-                  深入理解objc中的对象与类
-                </a>
+                深入理解objc中的对象与类
               
             
           </h1>
@@ -408,9 +306,7 @@
       
 
       
-        
-          
-            <h4 id="一、深入了解类与对象"><a href="#一、深入了解类与对象" class="headerlink" title="一、深入了解类与对象"></a>一、深入了解类与对象</h4><p>想要搞清楚这两个方法的区别，需要彻底搞清楚<code>objc</code>中关于类与对象的概念。</p>
+        <h4 id="一、深入了解类与对象"><a href="#一、深入了解类与对象" class="headerlink" title="一、深入了解类与对象"></a>一、深入了解类与对象</h4><p>想要搞清楚这两个方法的区别，需要彻底搞清楚<code>objc</code>中关于类与对象的概念。</p>
 <blockquote>
 <p><code>objc</code>中对象与类的概念</p>
 </blockquote>
@@ -549,16 +445,20 @@ Class class3 = object_getClass(aNumber);
 <p>原来<code>NSNumber</code>是类簇。这里还是简单的说说类簇的概念吧：一个父类有好多子类，父类在返回自身对象的时候，向外界隐藏各种细节，根据不同的需要返回的其实是不同的子类对象，这其实就是抽象类工厂的实现思路，iOS最典型的就是<code>NSNumber</code>。</p>
 <hr>
 <h4 id="至此，终于写完了这篇文章。希望对大家有所帮助吧"><a href="#至此，终于写完了这篇文章。希望对大家有所帮助吧" class="headerlink" title="至此，终于写完了这篇文章。希望对大家有所帮助吧~~"></a>至此，终于写完了这篇文章。希望对大家有所帮助吧~~</h4>
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
@@ -566,178 +466,36 @@ Class class3 = object_getClass(aNumber);
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/08/20/聊聊响应者链/" rel="next" title="聊聊响应者链">
+                <i class="fa fa-chevron-left"></i> 聊聊响应者链
+              </a>
             
-              
-                
-                <a class="post-title-link" href="/2016/08/20/聊聊响应者链/" itemprop="url">
-                  聊聊响应者链
-                </a>
-              
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
             
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-08-20T17:49:48+08:00" content="2016-08-20">
-              2016-08-20
-            </time>
-          </span>
-
-          
-
-          
+              <a href="/2016/08/20/在分类中添加属性/" rel="prev" title="在分类中添加属性">
+                在分类中添加属性 <i class="fa fa-chevron-right"></i>
+              </a>
             
-          
-
-          
-
-          
-          
-
-          
+          </div>
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>今天面试滴滴的时候聊到了<a href="http://www.jianshu.com/p/8f2f94ff0459" target="_blank" rel="external">自己以前遇到的一个坑</a>，其中涉及了一些响应者链条的事。本身这个bug就很有代表性(代表了自己对这块非常的不熟悉😃)。无独有偶，自己的好基友前几天腾讯电面一面时也遇到了<a href="http://kyxu.tech/2016/08/19/%E7%88%B6%E8%A7%86%E5%9B%BE%E5%A4%96%E9%83%A8%E5%AD%90%E8%A7%86%E5%9B%BE%E7%82%B9%E5%87%BB%E5%93%8D%E5%BA%94-hitTest/" target="_blank" rel="external">这个问题</a>。回来好好看了<a href="http://zhoon.github.io/ios/2015/04/12/ios-event.html" target="_blank" rel="external">大神的博客</a>。就顺手写个学习笔记自我总结下吧。</p>
-<h3 id="先聊聊响应链"><a href="#先聊聊响应链" class="headerlink" title="先聊聊响应链"></a>先聊聊响应链</h3><p><code>UIResponder</code>是所有可以响应事件的类的基类(从名字应该就可以看出来了)，其中包括最常见的UIView和<code>UIViewController</code>甚至是<code>UIApplication</code>，所以我们的<code>UIView</code>和<code>UIViewController</code>都是作为响应事件的载体。</p>
-<p>Apple🍎爸爸是这么说的：</p>
-<blockquote>
-<p>The UIResponder class defines an interface for objects that respond to and handle events. It is the superclass of UIApplication, UIView and its subclasses (which include UIWindow). Instances of these classes are sometimes referred to as responder objects or, simply, responders.</p>
-</blockquote>
-<p>先看看这个<code>UIResponder</code>的头文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">#import &lt;Foundation/Foundation.h&gt;</div><div class="line">#import &lt;UIKit/UIKitDefines.h&gt;</div><div class="line">#import &lt;UIKit/UIEvent.h&gt;</div><div class="line"></div><div class="line">NS_ASSUME_NONNULL_BEGIN</div><div class="line"></div><div class="line">@class UIPress;</div><div class="line">@class UIPressesEvent;</div><div class="line"></div><div class="line">NS_CLASS_AVAILABLE_IOS(2_0) @interface UIResponder : NSObject</div><div class="line"></div><div class="line">- (nullable UIResponder*)nextResponder;</div><div class="line"></div><div class="line">- (BOOL)canBecomeFirstResponder;    // default is NO</div><div class="line">- (BOOL)becomeFirstResponder;</div><div class="line"></div><div class="line">- (BOOL)canResignFirstResponder;    // default is YES</div><div class="line">- (BOOL)resignFirstResponder;</div><div class="line"></div><div class="line">- (BOOL)isFirstResponder;</div><div class="line">- (void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(nullable UIEvent *)event;</div><div class="line">- (void)touchesMoved:(NSSet&lt;UITouch *&gt; *)touches withEvent:(nullable UIEvent *)event;</div><div class="line">- (void)touchesEnded:(NSSet&lt;UITouch *&gt; *)touches withEvent:(nullable UIEvent *)event;</div><div class="line">- (void)touchesCancelled:(nullable NSSet&lt;UITouch *&gt; *)touches withEvent:(nullable UIEvent *)event;</div><div class="line">- (void)touchesEstimatedPropertiesUpdated:(NSSet * _Nonnull)touches NS_AVAILABLE_IOS(9_1);</div></pre></td></tr></table></figure>
-<p>注：这里我删除了一些此文无关的定义</p>
-<p>那么<code>UIResponder</code>和我们讲的相应者链条到底是什么关系呢？其实在<code>iOS</code>系统中，所谓响应者链条就是由这些<code>UIResponder</code>链接起来的。你可以想象成链表，链接他们的就是上面定义的属性<code>nextResponder</code>链接起来的。<br><img src="http://upload-images.jianshu.io/upload_images/1792274-621de0157a4b77a3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="响应者链条"></p>
-<h3 id="Hit-Testing-View"><a href="#Hit-Testing-View" class="headerlink" title="Hit-Testing View"></a><code>Hit-Testing View</code></h3><p>简单了解响应者链条是什么后，就要今天的主角登场了：<code>Hit-Testing View</code>。</p>
-<p>上节我们讲到了响应者链条，但是并没有说清楚它的工作流程。比如上图中的<code>intial view</code>是怎么寻找到的？系统正是通过一个叫做<code>Hit-Test</code>过程找到这个<code>initial obje</code>的。</p>
-<p><code>Hit-Test</code>的目的就是寻找目前手指点击到的那个最前的<code>view</code>，也可以理解为<code>responder</code>。<br>这个过程对应的方法在<code>UIView</code>里：</p>
-<pre><code>- (nullable UIView *)hitTest:(CGPoint)point withEvent:(nullable UIEvent *)event;   // recursively calls -pointInside:withEvent:. point is in the receiver&apos;s coordinate system
-- (BOOL)pointInside:(CGPoint)point withEvent:(nullable UIEvent *)event;   // default returns YES if point is in bounds
-</code></pre><p>当用户点击了手机屏幕时，<code>UIApplication</code>就会调用<code>UIWindow</code>的<code>hitTest: withEvent:</code>方法。这个方法最终返回一个<code>UiView</code>。也就是我们要找到的那个最前的<code>view</code>。那这个方法具体流程是怎么样的呢？</p>
-<p>我们拿下图说明下：<br><img src="http://upload-images.jianshu.io/upload_images/1792274-001b9095d1e63fe3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="层次结构"></p>
-<p><strong>UIWindow有一个MianVIew，MainView里面有三个subView：view A、view B、view C，他们各自有两个subView，他们层级关系是：view A在最下面，view B中间，view C最上(也就是addSubview的顺序，越晚add进去越在上面)。</strong></p>
-<p><strong>现在假设手指点击在了绿色的<code>View B</code>上：</strong><br>此时，<code>UIApplication</code>会调用<code>UIWindow</code>的<code>hitTest:WithEvent:</code>方法，接着<code>UIWindow</code>调用上面的第二个方法：<code>pointInside:withEvent:</code>。现在手指点击的位置显然在<code>MainView</code>的<code>bounds</code>内，于是这个方法返回yes。紧接着，<code>MainView</code>开始遍历<code>subviews</code>。此处需要注意的是，这个方法会从index值较大的位置开始遍历，比如此处就会先找到<code>VIew C</code>上。因为它是最后一个被加入<code>subviews</code>数组里的。在调用了<code>pointInside:withEvent:</code>方法后，返回了NO。于是继续在<code>MainView</code>的<strong>subview.index - 1</strong>的位置继续调用<code>pointInside:withEvent:</code>方法。如此循环，最终找到手指此时触摸的位置:<code>View B.1</code>。<br><img src="http://upload-images.jianshu.io/upload_images/1792274-6ab6cb6e961b46b0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="触摸发生时"></p>
-<p>完整流程：<br><img src="http://upload-images.jianshu.io/upload_images/1792274-3f5f137ab5e2631f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="完整流程"></p>
-<p>我们可以看到：判断当前这个<code>view</code>是不是<code>hitView</code>时，需要同时满足以下四个条件：</p>
-<pre><code>view.userInteractionEnable == YES
-view.hidden == NO
-view.alpha &gt; 0.01f
-[view pointInside:point withEvent:event] == YES
-</code></pre><p>代码实现起来还是比较简单的😄：</p>
-<pre><code>- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
-    if (self.hidden || self.alpha &lt;= 0.01f || [self pointInside:point withEvent:event] || !self.userInteractionEnabled) {
-        return nil;
-    }
-    for (UIView *subview in [self.subviews reverseObjectEnumerator]) {//注意倒叙
-
-        CGPoint newPoint = [subview convertPoint:point fromView:self];
-        UIView *hitView = [subview hitTest:newPoint withEvent:event];
-
-        if (hitView) {
-            return hitView;
-        }
-    }
-    return self;
-}
-</code></pre><h3 id="Hit-Testing-View应用"><a href="#Hit-Testing-View应用" class="headerlink" title="Hit-Testing View应用"></a><code>Hit-Testing View</code>应用</h3><h4 id="最常用的：扩大按钮热区"><a href="#最常用的：扩大按钮热区" class="headerlink" title="最常用的：扩大按钮热区"></a>最常用的：扩大按钮热区</h4><p>项目中经常有扩大某个按钮热区的需求，相信实际做过项目的童鞋都有过这样的经历。以前小弟的做法是把按钮宽高调大一点，但是这样也会导致按钮图片位移，还要改按钮的<code>UIEdgeInsets</code>等属性，很是蛋疼。有了<code>Hit-Testing View</code>，我们就可以这样写：😄</p>
-<pre><code>- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
-    if (self.hidden || self.alpha &lt;= 0.01f  !self.userInteractionEnabled) {
-        return nil;
-    }
-    CGRect newRect ={self.origin,self.width+=10,self.height+=10};
-    if (CGRectContainsPoint(newRect, point)) {
-        return nil;
-    }
-
-    for (UIView *subview in [self.subviews reverseObjectEnumerator]) {//注意倒叙
-
-        CGPoint newPoint = [subview convertPoint:point fromView:self];
-        UIView *hitView = [subview hitTest:newPoint withEvent:event];            
-        if (hitView) {
-            return hitView;
-        }
-    }
-    return self;
-}
-</code></pre><h3 id="事件的传递"><a href="#事件的传递" class="headerlink" title="事件的传递"></a>事件的传递</h3><p>有了响应者链条，事件的传递也就水到渠成了。在<code>UIApplication</code>调用了<code>UIWIndow</code>的<code>hitTest:withEevent:</code>方法并反悔了一个<code>hitView</code>后，就会通过<code>sendEvent:</code>这个方法将事件传递给当前的<code>hitView</code>。如果当前的<code>hitView</code>处理不了该事件，就会将事件交由自己的<code>nextResponder</code>处理，如此递归。若最后交由<code>UIApplication</code>仍然处理不了该事件，系统就会抛弃该事件。</p>
-<p>摘抄一段大神的博客:</p>
-<blockquote>
-<p>如果<code>view</code>重写了<code>touch</code>方法，我们一般会看到的效果是，这个<code>view</code>响应了事件之后，它<code>nextResponder</code>不会收到这个事件，即使重写了<code>nextResponder</code>的<code>touch</code>方法。这个时候如果想事件继续传递下去，可以调用<code>[super touchesBegan:touches withEvent:event]，</code>不建议直接调用<code>[self.nextRespondertouchesBegan:touches withEvent:event]</code>。</p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -745,6 +503,10 @@ view.alpha &gt; 0.01f
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -764,8 +526,17 @@ view.alpha &gt; 0.01f
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://tva3.sinaimg.cn/crop.0.0.511.511.180/006pqpL6jw8f4z97xky5nj30e70e8aai.jpg"
@@ -801,6 +572,17 @@ view.alpha &gt; 0.01f
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、深入了解类与对象"><span class="nav-number">1.</span> <span class="nav-text">一、深入了解类与对象</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、理解object-getClass函数与class方法。"><span class="nav-number"></span> <span class="nav-text">二、理解object_getClass函数与class方法。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#至此，终于写完了这篇文章。希望对大家有所帮助吧"><span class="nav-number">1.</span> <span class="nav-text">至此，终于写完了这篇文章。希望对大家有所帮助吧~~</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -897,6 +679,10 @@ view.alpha &gt; 0.01f
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
