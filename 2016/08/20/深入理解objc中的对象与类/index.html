@@ -91,7 +91,7 @@
 <meta property="og:site_name" content="T萌萌BiuBiuBiu~">
 <meta property="og:description" content="零、引言促使我写这篇文章的主要原因是我发现平时利用的class方法与object_getClass函数的返回值竟然是不一样的，这与我之前理解的类的概念一直有所偏差。在查阅了部分资料后，发现对objc中关于类与对象有了一个新的理解，遂撰此文记录下。">
 <meta property="og:image" content="http://i1.buimg.com/572363/8a498205c9c2114a.png">
-<meta property="og:updated_time" content="2016-08-20T10:25:27.000Z">
+<meta property="og:updated_time" content="2016-08-20T17:55:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解objc中的对象与类">
 <meta name="twitter:description" content="零、引言促使我写这篇文章的主要原因是我发现平时利用的class方法与object_getClass函数的返回值竟然是不一样的，这与我之前理解的类的概念一直有所偏差。在查阅了部分资料后，发现对objc中关于类与对象有了一个新的理解，遂撰此文记录下。">
@@ -103,7 +103,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     scheme: 'Mist',
-    sidebar: {"position":"left","display":"hide"},
+    sidebar: {"position":"right","display":"post"},
     fancybox: true,
     motion: true,
     duoshuo: {
@@ -139,7 +139,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -303,28 +303,12 @@
 <p><code>objc</code>中对象与类的概念</p>
 </blockquote>
 <p><code>objc</code>中关于对象的定义如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">/// Represents an instance of a class.</div><div class="line">struct objc_object &#123;</div><div class="line">    Class isa  OBJC_ISA_AVAILABILITY;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/// Represents an instance of a class.</span></div><div class="line"><span class="keyword">struct</span> objc_object &#123;</div><div class="line">    Class isa  OBJC_ISA_AVAILABILITY;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 <p>可见对象是一个含有<code>isa</code>指针的结构体。那么<code>isa</code>指向的<code>Class</code>又是什么呢？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/// An opaque type that represents an Objective-C class.</div><div class="line">typedef struct objc_class *Class;</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/// An opaque type that represents an Objective-C class.</span></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> objc_class *Class;</div></pre></td></tr></table></figure>
 <p>原来<code>Class</code>是一个指向<code>objc_class</code>结构体的指针，apple的注释写的很清楚，<code>Class</code>相当于<code>objc</code>中的类。所以只有我们搞明白了<code>objc_class</code>结构体到底是什么，也就搞清楚了<code>objc</code>中关于类的概念。<br>objc/runtime.h中关于该结构体的定义如下:</p>
-<pre><code>struct objc_class {    
-    Class isa  OBJC_ISA_AVAILABILITY;
-
-#if !__OBJC2__
-    Class super_class                                        OBJC2_UNAVAILABLE;
-    const char *name                                         OBJC2_UNAVAILABLE;
-    long version                                             OBJC2_UNAVAILABLE;
-    long info                                                OBJC2_UNAVAILABLE;
-    long instance_size                                       OBJC2_UNAVAILABLE;
-    struct objc_ivar_list *ivars                             OBJC2_UNAVAILABLE;
-    struct objc_method_list **methodLists                    OBJC2_UNAVAILABLE;
-    struct objc_cache *cache                                 OBJC2_UNAVAILABLE;
-    struct objc_protocol_list *protocols                     OBJC2_UNAVAILABLE;
-#endif
-
-} OBJC2_UNAVAILABLE;
-/* Use `Class` instead of `struct objc_class *` */
-</code></pre><p>虽然下面的一段串内容已经是<code>OBJC2_UNAVAILABLE</code>了，但依然可以看出一些apple关于<code>class</code>的定义的倪端:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">struct</span> objc_class &#123;	</div><div class="line">    Class isa  OBJC_ISA_AVAILABILITY;</div><div class="line">	</div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> !__OBJC2__</span></div><div class="line">    Class super_class                                        OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *name                                         OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> version                                             OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> info                                                OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">long</span> instance_size                                       OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_ivar_list *ivars                             OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_method_list **methodLists                    OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_cache *cache                                 OBJC2_UNAVAILABLE;</div><div class="line">    <span class="keyword">struct</span> objc_protocol_list *protocols                     OBJC2_UNAVAILABLE;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">	</div><div class="line">&#125; OBJC2_UNAVAILABLE;</div><div class="line"><span class="comment">/* Use `Class` instead of `struct objc_class *` */</span></div></pre></td></tr></table></figure>
+<p>虽然下面的一段串内容已经是<code>OBJC2_UNAVAILABLE</code>了，但依然可以看出一些apple关于<code>class</code>的定义的倪端:</p>
 <ol>
 <li>我们注意到，<code>objc_class</code>结构体内部也含有一个<code>isa</code>指针，也就说“<strong>类也是有类的</strong>”。虽然读起来很拗口，但这也是为什么类有时候也被称为类对象的原因：<strong>类其实也是一个对象~</strong></li>
 <li>下面一段内容含有：类的方法列表(这些方法其实都是对象方法，至于为什么，后面解释)，类的成员变量列表，类的<code>cache</code>列表，类的协议列表。更重要的是，它还有一个指向<code>Class</code>的<code>super_class</code>指针。</li>
