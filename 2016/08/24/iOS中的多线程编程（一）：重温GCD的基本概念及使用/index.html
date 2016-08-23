@@ -1,0 +1,760 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="引言关于iOS开发中的多线程，一直是工作中的重要组成部分。由于难以理解且对app的用户体验影响重大，也是面试中的考察重点，一名合格的iOS程序🐒理应掌握多线程编程。
+自己虽然以前有学习过关于iOS多线程的部分，但由于当时对iOS开发还处于懵懂阶段，很多地方理解可能均有问题，遂跟着这篇博客重温温习了一遍GCD。
+ps:本文将分为两部分，以下内容是关于GCD的基本概念及常见API。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS中的多线程编程（一）：重温GCD的基本概念及使用">
+<meta property="og:url" content="http://yoursite.com/2016/08/24/iOS中的多线程编程（一）：重温GCD的基本概念及使用/index.html">
+<meta property="og:site_name" content="🐰BiuBiuBiu~">
+<meta property="og:description" content="引言关于iOS开发中的多线程，一直是工作中的重要组成部分。由于难以理解且对app的用户体验影响重大，也是面试中的考察重点，一名合格的iOS程序🐒理应掌握多线程编程。
+自己虽然以前有学习过关于iOS多线程的部分，但由于当时对iOS开发还处于懵懂阶段，很多地方理解可能均有问题，遂跟着这篇博客重温温习了一遍GCD。
+ps:本文将分为两部分，以下内容是关于GCD的基本概念及常见API。">
+<meta property="og:updated_time" content="2016-08-23T16:43:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS中的多线程编程（一）：重温GCD的基本概念及使用">
+<meta name="twitter:description" content="引言关于iOS开发中的多线程，一直是工作中的重要组成部分。由于难以理解且对app的用户体验影响重大，也是面试中的考察重点，一名合格的iOS程序🐒理应掌握多线程编程。
+自己虽然以前有学习过关于iOS多线程的部分，但由于当时对iOS开发还处于懵懂阶段，很多地方理解可能均有问题，遂跟着这篇博客重温温习了一遍GCD。
+ps:本文将分为两部分，以下内容是关于GCD的基本概念及常见API。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/08/24/iOS中的多线程编程（一）：重温GCD的基本概念及使用/"/>
+
+  <title> iOS中的多线程编程（一）：重温GCD的基本概念及使用 | 🐰BiuBiuBiu~ </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">🐰BiuBiuBiu~</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">记录自己学习的点点滴滴</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS中的多线程编程（一）：重温GCD的基本概念及使用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-08-24T00:42:17+08:00" content="2016-08-24">
+              2016-08-24
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/08/24/iOS中的多线程编程（一）：重温GCD的基本概念及使用/" class="leancloud_visitors" data-flag-title="iOS中的多线程编程（一）：重温GCD的基本概念及使用">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>关于<code>iOS</code>开发中的多线程，一直是工作中的重要组成部分。由于难以理解且对<code>app</code>的用户体验影响重大，也是面试中的考察重点，一名合格的<code>iOS</code>程序🐒理应掌握多线程编程。</p>
+<p>自己虽然以前有学习过关于<code>iOS</code>多线程的部分，但由于当时对<code>iOS</code>开发还处于懵懂阶段，很多地方理解可能均有问题，遂跟着<a href="https://github.com/nixzhu/dev-blog/blob/master/2014-04-19-grand-central-dispatch-in-depth-part-1.md" target="_blank" rel="external">这篇博客</a>重温温习了一遍<code>GCD</code>。</p>
+<p><em>ps:本文将分为两部分，以下内容是关于<code>GCD</code>的基本概念及常见<code>API</code>。</em></p>
+<a id="more"></a>
+<!--注：本文不再讨论什么是多线程，`block`等内容。如果你对此不甚了解，戳：[iOS 上的多线程和 GCD 入门教程](https://www.raywenderlich.com/4295/multithreading-and-grand-central-dispatch-on-ios-for-beginners-tutorial)
+-->
+<h2 id="什么是GCD"><a href="#什么是GCD" class="headerlink" title="什么是GCD"></a>什么是<code>GCD</code></h2><p>🍎Crand Central Dispatch Reference👇：</p>
+<blockquote>
+<p>Grand Central Dispatch (GCD) comprises <strong>language features, runtime libraries, and system enhancements</strong> that provide <strong>systemic</strong>, <strong>comprehensive improvements</strong> to the support for concurrent code executikkon on multicore hardware in iOS and OS X.</p>
+</blockquote>
+<h2 id="重温GCD术语"><a href="#重温GCD术语" class="headerlink" title="重温GCD术语"></a>重温GCD术语</h2><h3 id="任务与队列-Task-amp-Queue"><a href="#任务与队列-Task-amp-Queue" class="headerlink" title="任务与队列 Task &amp; Queue"></a>任务与队列 Task &amp; Queue</h3><p><code>GCD</code>术语中有两个核心的概念：任务，队列。</p>
+<p>在本文中，我们可以将任务暂定为<code>objc</code>中的一个<code>block</code>。我们可以把任务与队列都看成是<code>objc</code>中的<strong>对象</strong>。任务与队列都有他们自己的<strong>属性与行为</strong>。</p>
+<blockquote>
+<p>任务的属性是:同步or异步</p>
+<p>队列的属性是:并发or串行</p>
+</blockquote>
+<h3 id="串行与并发-Serial-amp-Concurrent"><a href="#串行与并发-Serial-amp-Concurrent" class="headerlink" title="串行与并发 | Serial &amp; Concurrent"></a>串行与并发 | Serial &amp; Concurrent</h3><p>串行与并发是队列派发任务的行为描述，可以理解为队列的属性。既然是队列，那么必定遵循<code>FIFO</code>的原则。无论是串行还是并发队列，一定都是先进先出<strong>即先进入队列的一定会被先执行，但是不一定先完成。</strong></p>
+<h4 id="串行："><a href="#串行：" class="headerlink" title="串行："></a>串行：</h4><p>串行含义就是一个接一个的派发任务，注意理解<strong>一个接一个</strong>，即为要等待上一个任务完成了，才会<strong>派发</strong>下一个任务。</p>
+<h4 id="并行："><a href="#并行：" class="headerlink" title="并行："></a>并行：</h4><p>并行的意义就与串行相反，虽然它也会按照<code>FIFO</code>原则派发任务，但是它并不会等待上一个任务完成后才会派发下一个任务，而是直接将任务抛出。</p>
+<p><em>ps:注意此处是==并发==不是==并行==，二者不可混淆。</em>若有兴趣，可参考👇：</p>
+<p>所谓的“并发”，英文翻译是concurrent。而并行是parallelism。</p>
+<blockquote>
+<p>并发指的是一种<strong>现象</strong>，一种经常出现，无可避免的<strong>现象</strong>。它描述的是“多个任务同时发生，需要被处理”这一现象。它的侧重点在于“发生”。</p>
+</blockquote>
+<p>比如有很多人排队等待检票，这一现象就可以理解为并发。</p>
+<blockquote>
+<p>并行指的是一种<strong>技术</strong>，一个同时处理多个任务的<strong>技术</strong>。它描述了一种能够同时处理多个任务的<strong>能力</strong>，侧重点在于“运行”。</p>
+</blockquote>
+<p>比如景点开放了多个检票窗口，同一时间内能服务多个游客。这种情况可以理解为并行。</p>
+<h4 id="常见的队列们："><a href="#常见的队列们：" class="headerlink" title="常见的队列们："></a>常见的队列们：</h4><p>首先，系统提供给你一个叫做 <strong>主队列</strong>（<code>main queue</code>） 的特殊队列。和其它串行队列一样，这个队列中的任务一次只能执行一个。然而，它能保证所有的任务都在主线程执行，而主线程是唯一可用于更新 UI 的线程。这个队列就是用于<strong>发送消息</strong>给 <code>UIView</code> 或<strong>发送通知</strong>的。</p>
+<p>系统同时提供给你好几个并发队列。它们叫做 <strong>全局调度队列</strong>（<code>Global Dispatch Queues</code>） 。目前的四个全局队列有着不同的优先级：<strong>background、low、default 以及 high</strong>。要知道，<code>Apple</code> 的 <code>API</code> 也会使用这些队列，<strong>所以你添加的任何任务都不会是这些队列中唯一的任务</strong>。</p>
+<p>最后，你也可以创建自己的串行队列或并发队列。这就是说，至少有五个队列任你处置：主队列、四个全局调度队列，再加上任何你自己创建的队列。</p>
+<p>以上是调度队列的大框架！</p>
+<h3 id="同步与异步-Synchronous-amp-Asynchronous"><a href="#同步与异步-Synchronous-amp-Asynchronous" class="headerlink" title="同步与异步 | Synchronous &amp; Asynchronous"></a>同步与异步 | Synchronous &amp; Asynchronous</h3><p>上文提到同步与异步都是任务对象的“属性”，这个属性的作用就是标志着任务被执行的方式：</p>
+<h4 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h4><p>同步的含义是该任务执行时，<strong>需要等这个任务完成了，才继续线程中的下一个任务</strong>。如果你对多线程有一定的了解，你能立即领悟到同步肯定是在<strong>当前线程中执行任务的</strong>，而需要等待这个任务完成的特性使得同步任务<strong>必然会阻塞当前线程</strong>。</p>
+<h4 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h4><p>与同步相反，异步任务并不需要<strong>被等待</strong>。即线程执行异步任务时，不会阻塞住当前线程。但是需要注意的是：执行异步任务时，<strong>并不一定会开辟新的线程</strong>。原因是在主队列进行任务时，无论是异步还是同步，都将会被放在主线程中。</p>
+<p>放个表格总结下：</p>
+<table>
+<thead>
+<tr>
+<th>example</th>
+<th>同步</th>
+<th>异步</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主队列</td>
+<td>主线程</td>
+<td>主线程</td>
+</tr>
+<tr>
+<td>串行队列</td>
+<td>当前线程</td>
+<td>开辟线程</td>
+</tr>
+<tr>
+<td>并发队列</td>
+<td>当前线程</td>
+<td>开辟线程</td>
+</tr>
+</tbody>
+</table>
+<p>注：一定要理解好“派发”与“执行”之间的关系，其实这个地方用对象来理解队列，线程，<code>GCD</code>，串行or并行是很方便的。</p>
+<h3 id="上下文切换-Context-Switch"><a href="#上下文切换-Context-Switch" class="headerlink" title="上下文切换 Context Switch"></a>上下文切换 Context Switch</h3><p>一个上下文切换指当你在单个进程里切换执行不同的线程时存储与恢复执行状态的过程。这个过程在编写多任务应用时很普遍，但会带来一些额外的开销。</p>
+<h3 id="线程安全-Thread-Safe"><a href="#线程安全-Thread-Safe" class="headerlink" title="线程安全 Thread Safe"></a>线程安全 Thread Safe</h3><p>线程安全的代码能在多线程或并发任务中被安全的调用，而不会导致任何问题（数据损坏，崩溃，等）。线程不安全的代码在某个时刻只能在一个上下文中运行。一个线程安全代码的例子是 <code>NSDictionary</code> 。你可以在同一时间在多个线程中使用它而不会有问题。另一方面，<code>NSMutableDict;ionary</code> 就不是线程安全的，应该保证一次只能有一个线程访问它。</p>
+<h2 id="从API到使用场景"><a href="#从API到使用场景" class="headerlink" title="从API到使用场景"></a>从<code>API</code>到使用场景</h2>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>请杯咖啡喝？</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://i1.buimg.com/572363/b21593e5f65ea204.jpg" alt="Zheng Li WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://i1.buimg.com/572363/7caac38df4844f66.jpg" alt="Zheng Li Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/21/ACoolCustomKVO-自己动手实现支持block/" rel="next" title="ACoolCustomKVO--自己动手实现支持block回调的KVO">
+                <i class="fa fa-chevron-left"></i> ACoolCustomKVO--自己动手实现支持block回调的KVO
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tva3.sinaimg.cn/crop.0.0.511.511.180/006pqpL6jw8f4z97xky5nj30e70e8aai.jpg"
+               alt="Zheng Li" />
+          <p class="site-author-name" itemprop="name">Zheng Li</p>
+          <p class="site-description motion-element" itemprop="description">iOS开发菜鸡，努力提高自我中。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是GCD"><span class="nav-number">2.</span> <span class="nav-text">什么是GCD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重温GCD术语"><span class="nav-number">3.</span> <span class="nav-text">重温GCD术语</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#任务与队列-Task-amp-Queue"><span class="nav-number">3.1.</span> <span class="nav-text">任务与队列 Task & Queue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#串行与并发-Serial-amp-Concurrent"><span class="nav-number">3.2.</span> <span class="nav-text">串行与并发 | Serial & Concurrent</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#串行："><span class="nav-number">3.2.1.</span> <span class="nav-text">串行：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#并行："><span class="nav-number">3.2.2.</span> <span class="nav-text">并行：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常见的队列们："><span class="nav-number">3.2.3.</span> <span class="nav-text">常见的队列们：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同步与异步-Synchronous-amp-Asynchronous"><span class="nav-number">3.3.</span> <span class="nav-text">同步与异步 | Synchronous & Asynchronous</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#同步"><span class="nav-number">3.3.1.</span> <span class="nav-text">同步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异步"><span class="nav-number">3.3.2.</span> <span class="nav-text">异步</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#上下文切换-Context-Switch"><span class="nav-number">3.4.</span> <span class="nav-text">上下文切换 Context Switch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程安全-Thread-Safe"><span class="nav-number">3.5.</span> <span class="nav-text">线程安全 Thread Safe</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从API到使用场景"><span class="nav-number">4.</span> <span class="nav-text">从API到使用场景</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zheng Li</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("28Bi52ufQCnrlpfv4vbx8JEG-gzGzoHsz", "1cAbB9JCSijqEURfv3Pa9uYd");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>
