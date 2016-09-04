@@ -1128,128 +1128,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/08/类的`initialize`与`load`/" itemprop="url">
-                  Untitled
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-08-08T23:36:36+08:00" content="2016-08-08">
-              2016-08-08
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/08/类的`initialize`与`load`/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/08/类的`initialize`与`load`/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/08/08/类的`initialize`与`load`/" class="leancloud_visitors" data-flag-title="">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">visitors </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="类的initialize与load"><a href="#类的initialize与load" class="headerlink" title="类的initialize与load"></a>类的<code>initialize</code>与<code>load</code></h3><hr>
-<blockquote>
-<p><code>+ initialize</code>方法</p>
-</blockquote>
-<ul>
-<li>初始化一个类对象在它收到第一条msg之前</li>
-<li>一个类or所有继承自该类的类都会在收到第一条消息前，接收到<strong>runtime</strong>给它们发送的<code>initialize</code>消息。需要注意的是，<code>initialize</code>方法是在一个线程安全的环境下调用的，且父类可能会调用多次<code>initialize</code>方法。因为若一个类的子类没有实现<code>initialize</code>方法，<strong>runtime</strong>就会调用其父类的方法，直到找到一个被实现的方法。</li>
-<li>一个类的<code>initialize</code>方法只会调用一次。    </li>
-</ul>
-<hr>
-<blockquote>
-<p><code>+load</code>方法<br>e</p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1291,7 +1169,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
